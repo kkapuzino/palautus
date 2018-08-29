@@ -9,30 +9,24 @@ function image_information($original_file)
     $filesize = filesize($original_file);
    
     // Tarkistetaan tiedoston tyyppi
-    if($type[2] == 1) // GIF
-    {
+    if($type[2] == 1){ // GIF
         $file_extension = "gif";
     }
-    elseif($type[2] == 2) // JPEG
-    {
+    elseif($type[2] == 2){ // JPEG
         $file_extension = "jpg";
     }
-    elseif($type[2] == 3) // PNG
-    {
+    elseif($type[2] == 3){ // PNG
         $file_extension = "png";
     }
-    else // Tiedostomuoto ei ole tuettu, palauttaa FALSE
-    {
+    else {// Tiedostomuoto ei ole tuettu, palauttaa FALSE
         $file_extension = FALSE;
     }
     // Funktio palauttaa arvot, jos ok
-    if($file_extension)
-    {
+    if($file_extension){
         // Palauttaa type,tiedostopÃ¤Ã¤te,leveys,korkeus,tiedostokoko
         return array($type[2],$file_extension,$type[0],$type[1],$filesize);
     }
-    else
-    {
+    else{
         // Tiedostotyyppi ei ole tuettu tai jotain hÃ¤iriÃ¶Ã¶
         return array(FALSE,FALSE,FALSE,FALSE);
     }
@@ -46,34 +40,28 @@ function create_resized_image($original_file,$destination_file,$resized_width,$r
     list($original_width, $original_height, $type) = getimagesize($original_file);
    
     // Tarkistetaan tiedoston tyyppi
-    if($type == 1) // GIF
-    {
+    if($type == 1){ // GIF
         $original_image = imagecreatefromgif($original_file);
             // LÃ¤pinÃ¤kyvyys -> valkoinen
             $white = imagecolorallocate($original_image, 255, 255, 255);
             $transparent = imagecolortransparent($original_image, $white);
     }
-    elseif($type == 2) // JPEG
-    {
+    elseif($type == 2){ // JPEG
         $original_image = imagecreatefromjpeg($original_file);
     }
-    elseif($type == 3) // PNG
-    {
+    elseif($type == 3){ // PNG
         $original_image = imagecreatefrompng($original_file);
     }
-    else // Tiedostomuoto ei ole tuettu, palauttaa FALSE
-    {
+    else {// Tiedostomuoto ei ole tuettu, palauttaa FALSE
         $type = FALSE;
     }
-    if($type)
-    {
+    if($type){
         // Lasketaan kuvalle uusi koko siten, ettÃ¤ kuvasuhde sÃ¤ilyy
         $new_w = $original_width/$resized_width; // Kuvasuhde: leveys
         $new_h = $original_height/$resized_height; // Kuvasuhde: korkeus
         if($new_w > $new_h || $new_w == $new_h)
         {
-            if($new_w < 1)
-            {
+            if($new_w < 1){
                 // Jos alkuperÃ¤inen kuva on pienempi kuin luotava, luodaan alkuperÃ¤isen kokoinen kuva
                 $new_w = 1;
             }
@@ -81,10 +69,8 @@ function create_resized_image($original_file,$destination_file,$resized_width,$r
             $new_width = $original_width / $new_w;
             $new_height = $original_height / $new_w;
         }
-        elseif($new_w < $new_h)
-        {
-            if($new_h < 1)
-            {
+        elseif($new_w < $new_h){
+            if($new_h < 1){
                 // Jos alkuperÃ¤inen kuva on pienempi kuin luotava, luodaan alkuperÃ¤isen kokoinen kuva
                 $new_h = 1;
             }
@@ -98,16 +84,13 @@ function create_resized_image($original_file,$destination_file,$resized_width,$r
         imagecopyresampled($image, $original_image, 0, 0, 0, 0, $new_width, $new_height, $original_width, $original_height);
        
         // Tallennetaan uusi kuva mÃ¤Ã¤riteltyyn tiedostoon ja annetaan sopiva tiedostopÃ¤Ã¤te
-        if($type == 1) // GIF
-        {
+        if($type == 1){ // GIF
             imagegif($image, $destination_file);
         }
-        elseif($type == 2) // JPEG
-        {
+        elseif($type == 2){ // JPEG
             imagejpeg($image, $destination_file);
         }
-        elseif($type == 3) // PNG
-        {
+        elseif($type == 3){ // PNG
             imagepng($image, $destination_file);
         }
     }
@@ -132,7 +115,7 @@ function luo_kansio($maakansio,$galleriakansio)
   $uploadpolku= $polku."/upload";
   if($ok)
   {
-	 if(mkdir($thumbpolku, 0755) && mkdir($kuvatpolku, 0755) && mkdir($uploadpolku, 0755)) $ok=TRUE;
+    if(mkdir($thumbpolku, 0755) && mkdir($kuvatpolku, 0755) && mkdir($uploadpolku, 0755)) $ok=TRUE;
   }
   suojaa_kansio($polku);
  return $ok;
@@ -140,11 +123,11 @@ function luo_kansio($maakansio,$galleriakansio)
 
 function pura_suojaus($kansio)
 {
-	chmod($kansio, 0777);
+    chmod($kansio, 0777);
 }
 
 function suojaa_kansio($kansio)
 {
-	chmod($kansio, 0755);
+    chmod($kansio, 0755);
 }
 ?>
