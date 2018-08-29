@@ -1,0 +1,5 @@
+Kannattaa kehitt‰‰ koodi nen‰, ett‰ huomaat mit‰ koodissa tarvitaan ja mit‰ ei.
+Kommentit ovat ihmisille, ei koneille, kannattaa siis kysy‰ kommetteja kirjottaessa "miksi" eik‰ "mik‰"
+K‰yt‰ v‰hemm‰n classeja, ne sekottavat liikaa asioita.
+poista kuollut koodi.
+Huomaa omat virheet
