@@ -1,5 +1,8 @@
 <?php
+session_start();
+$_SESSION["oppilasID"]=1;
 require "./yhteys.php";//tietokantayhteys käyttöön 
+require "./tkfunktiot.php";
 $oppi="SELECT etunimi, sukunimi FROM oppilas WHERE etunimi = 'joku'";
 
 ?>
@@ -29,12 +32,12 @@ $oppi="SELECT etunimi, sukunimi FROM oppilas WHERE etunimi = 'joku'";
 			<div class="col"><p class="grey"><b>Unimäärä</b></p> </div>
 			<div class="col"><p class="grey"><b>Liikunta</b></p> </div>
 			<div class="col"><p class="grey"><b>Ruokailu</b></p> </div>
-			<div class="col"><p class="grey"><b>Mieliala</b></p> </div>
+			<div class="col"><p class="grey"><b>Mieliala (1 - 5)</b></p> </div>
 		</div>
 		<?php
 			
 
-			$sql="SELECT peli.genre, peli.maara, paivakirja.pvm, paivakirja.uni, liikunta.laji, paivakirja.mieliala, ruokailu.ateria FROM paivakirja
+			$sql="SELECT peli.genre, paivakirja.maara, paivakirja.pvm, paivakirja.uni, liikunta.laji, paivakirja.mieliala, ruokailu.ateria FROM paivakirja
 			INNER JOIN peli ON paivakirja.PeliID=peli.PeliID
 			INNER JOIN ruokailu ON paivakirja.RuokailuID=ruokailu.RuokailuID
 			INNER JOIN liikunta ON paivakirja.liikuntaID=liikunta.liikuntaID";
@@ -66,8 +69,66 @@ $oppi="SELECT etunimi, sukunimi FROM oppilas WHERE etunimi = 'joku'";
 		</div>
 		<?php
 			} 
+
+			if (!empty($_POST["genre"]) && !empty($_POST["maara"]) && !empty($_POST["Uni"]) && !empty($_POST["liikunta"]) && !empty($_POST["ruokailu"]) && !empty($_POST["Mieliala"]) && !empty($_POST["pvm"])) { 
+				$peliid = $_POST['genre']; 
+				$pmaara = $_POST['maara']; 
+				$Uni = $_POST['Uni']; 
+				$liikunt = $_POST['liikunta']; 
+				$ruokailu = $_POST['ruokailu']; 
+				$mieliala = $_POST['Mieliala']; 
+				$pvm = $_POST['pvm']; 
+
+				$tieto = "INSERT INTO paivakirja (PeliID,maara,Uni,LiikuntaID,RuokailuID,Mieliala,pvm) VALUES ('$peliid','$pmaara','$Uni','$liikunt','$ruokailu','$mieliala','$pvm')"; 
+			echo $tieto;
+				$kysely=$yhteys->query($tieto); 
+				//$kysely->execute(array($peliid,$pmaara,$Uni,$liikunt,$ruokailu,$mieliala,$pvm)); 
+				if($kysely!=FALSE) echo "Tiedot lisätty"; 
+				else echo "Lisäys ei onnistunut, yritä myöhemmin uudelleen"; 
+			}
 		?>
+
+
+			<button onclick="document.getElementById('id01').style.display='block'" class="col text-center link">Lisää merkintä</button>
+			<div id="id01" class="modal">
+			  <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">&times;</span>
+			  <form class="modal-content" action="./index.php" method="post">
+				<div class="container">
+				  <h1>Lisää merkintä</h1>
+				  <hr>
+				  <?php echo tulosta_peligenre($peliId,$yhteys); ?><br>
+				  <input type="text" placeholder="pelauksen määrä(H)" name="maara" value="<?php if(isset($_POST["maara"]))?>"required>
+				  <input type="text" placeholder="unen määrä(H)" name="Uni" value="<?php if(isset($_POST["Uni"]))?>" required><br>
+				  <?php echo tulosta_lajivalintalista($lajiId,$yhteys); ?><br>
+				  <?php echo tulosta_ruokalista($ruokaId,$yhteys); ?><br>
+				  <label><b> Mieliala</b>
+					<input type="radio" name="Mieliala" value="1"> 1
+					<input type="radio" name="Mieliala" value="2"> 2
+					<input type="radio" name="Mieliala" value="3" checked> 3
+					<input type="radio" name="Mieliala" value="4"> 4
+					<input type="radio" name="Mieliala" value="5"> 5
+				  </label><br>
+					<input type="date" name="pvm" value="<?php if(isset($_POST["pvm"]))?>"><br> 
+				  <div class="clearfix">
+					<button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn">Lopeta</button>
+					<button type="submit" class="signupbtn">Tallenna</button>
+				  </div>
+				</div>
+			  </form>
+			</div>
+
+
+			<script>
+			// Get the modal
+			var modal = document.getElementById('id01');
+
+			// When the user clicks anywhere outside of the modal, close it
+			window.onclick = function(event) {
+			  if (event.target == modal) {
+				modal.style.display = "none";
+			  }
+			}
+			</script>
+
     </div>
-    
 </body>
-</html>
